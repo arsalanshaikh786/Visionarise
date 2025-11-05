@@ -7,15 +7,12 @@
 
 <title>Vision Classes Study Material | BookLoop | Notes & PDF Books | Dipali Arote Mam & Shaikh Arsalan</title>
 
-<!-- ✅ SEO DESCRIPTION -->
 <meta name="description" content="Vision Classes Study Material & BookLoop - Free PDF Notes, Books, Question Papers & Solutions for Class 9, 10, 11 & 12. Managed by Dipali Arote Mam & Shaikh Arsalan.">
 
-<!-- ✅ SEO KEYWORDS -->
 <meta name="keywords" content="Vision Classes Study Material, BookLoop, Dipali Arote Mam, Shaikh Arsalan, Class 9 Notes, Class 10 Notes, Class 11 Notes, Class 12 Notes, Physics PDF, Chemistry PDF, Math PDF, Biology PDF, Study Materials">
 
 <meta name="robots" content="index, follow">
 
-<!-- ✅ OPENGRAPH FOR GOOGLE + SOCIAL SHARE -->
 <meta property="og:title" content="Vision Classes Study Material & BookLoop - Free Notes and PDF Books">
 <meta property="og:description" content="Download Free Notes, Books & PDFs from Vision Classes Study Hub and BookLoop. Created by Dipali Arote Mam & Shaikh Arsalan.">
 <meta property="og:type" content="website">
@@ -83,11 +80,7 @@
         border-radius:8px;
     }
 
-    .card h3{
-        font-size:18px;
-        margin:10px 0;
-        color:#1e3c72;
-    }
+    .card h3{font-size:18px;margin:10px 0;color:#1e3c72;}
 
     .card button{
         background:#4e73df;
@@ -128,13 +121,9 @@
         <option value="12">Class 12</option>
     </select>
 
+    <!-- ✅ AUTO SUBJECT LIST ADDED HERE -->
     <select id="filterSubject">
         <option value="">All Subjects</option>
-        <option value="Physics">Physics</option>
-        <option value="Chemistry">Chemistry</option>
-        <option value="Math">Math</option>
-        <option value="Biology">Biology</option>
-        <option value="English">English</option>  <option value="English">Geography</option>
     </select>
 </div>
 
@@ -167,12 +156,30 @@ const search = document.getElementById("search");
 const filterClass = document.getElementById("filterClass");
 const filterSubject = document.getElementById("filterSubject");
 
-// ✅ Load All Data From Firestore
+// ✅ Load All Data + Auto Subjects
 async function loadMaterial(){
     container.innerHTML = "<p>Loading...</p>";
     const snap = await getDocs(collection(db,"materials"));
     allData = [];
-    snap.forEach(doc => allData.push(doc.data()));
+
+    let subjects = new Set(); // ✅ To store unique subjects
+
+    snap.forEach(doc =>{
+        let d = doc.data();
+        allData.push(d);
+
+        // ✅ Add to subject list
+        if(d.subject && d.subject.trim() !== ""){
+            subjects.add(d.subject);
+        }
+    });
+
+    // ✅ AUTO UPDATE SUBJECT FILTER
+    filterSubject.innerHTML = `<option value="">All Subjects</option>`;
+    subjects.forEach(sub=>{
+        filterSubject.innerHTML += `<option value="${sub}">${sub}</option>`;
+    });
+
     showData(allData);
 }
 
