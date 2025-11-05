@@ -27,14 +27,20 @@
     <option value="12">Class 12</option>
   </select>
 
-  <select id="subject">
+  <!-- ✅ Subject Dropdown Updated -->
+  <select id="subject" onchange="showCustomSubject()">
     <option value="">Select Subject</option>
     <option value="Physics">Physics</option>
     <option value="Chemistry">Chemistry</option>
     <option value="Math">Math</option>
     <option value="Biology">Biology</option>
     <option value="English">English</option>
-  <option value="English">Geography</option></select>
+    <option value="Geography">Geography</option>
+    <option value="Other">Other (Custom Subject)</option>
+  </select>
+
+  <!-- ✅ Custom Subject Input -->
+  <input id="customSubject" style="display:none" placeholder="Enter Custom Subject">
 
   <input id="imgUrl" placeholder="Paste PDF Image URL (cover photo)">
   <input id="pdfLink" placeholder="Paste PDF Link">
@@ -54,6 +60,19 @@
   </thead>
   <tbody id="tableBody"></tbody>
 </table>
+
+<script>
+function showCustomSubject(){
+  let sub = document.getElementById("subject").value;
+  let custom = document.getElementById("customSubject");
+  if(sub === "Other"){
+    custom.style.display = "block";
+  } else {
+    custom.style.display = "none";
+    custom.value = "";
+  }
+}
+</script>
 
 <script type="module">
 
@@ -76,13 +95,16 @@ const db = getFirestore(app);
 const addBtn = document.getElementById("addBtn");
 const tableBody = document.getElementById("tableBody");
 
-// ✅ Add Material
+// ✅ Add Material with Custom Subject
 addBtn.onclick = async ()=>{
   let title = document.getElementById("title").value;
   let cls = document.getElementById("class").value;
   let sub = document.getElementById("subject").value;
+  let customSub = document.getElementById("customSubject").value;
   let img = document.getElementById("imgUrl").value;
   let link = document.getElementById("pdfLink").value;
+
+  if(sub === "Other") sub = customSub;
 
   if(!title || !cls || !sub || !img || !link){
     return alert("⚠ Please fill all fields!");
